@@ -1,4 +1,5 @@
 import {isEscapeKey} from './util.js';
+import {onDocumentEscKeydown} from './user-form.js';
 
 const templateSuccessMessage = document.querySelector('#success')
   .content.querySelector('.success');
@@ -12,6 +13,7 @@ const onModalEscKeydown = (evt) => {
   if(isEscapeKey(evt)) {
     evt.preventDefault();
     closeModalMessage();
+    document.addEventListener('keydown', onDocumentEscKeydown);
   }
 };
 
@@ -19,6 +21,7 @@ function closeModalMessage () {
   templateSuccessMessage.classList.add('hidden');
   templateErrorMessage.classList.add('hidden');
   document.removeEventListener('keydown', onModalEscKeydown);
+  document.addEventListener('keydown', onDocumentEscKeydown);
 }
 
 const showSuccessMessage = () => {
@@ -31,6 +34,7 @@ const showErrorMessage = () => {
   body.append(templateErrorMessage);
   templateErrorMessage.classList.remove('hidden');
   document.addEventListener('keydown', onModalEscKeydown);
+  document.removeEventListener('keydown', onDocumentEscKeydown);
 };
 
 successButton.addEventListener('click', closeModalMessage);

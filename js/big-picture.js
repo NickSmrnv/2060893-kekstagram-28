@@ -76,9 +76,9 @@ const openBigPicture = (evt) => {
 
 bigPicture.addEventListener('click', openBigPicture);
 
-const onCancelButtonClick = () => {
+cancelButton.addEventListener('click', () => {
   closeBigPicture();
-};
+});
 
 const renderPictureDetails = (index) => {
   bigPicture.querySelector('.big-picture__img img').src = index.url;
@@ -101,7 +101,5 @@ const showBigPicture = (index) => {
     renderComments();
   });
 };
-
-cancelButton.addEventListener('click', onCancelButtonClick);
 
 export {showBigPicture};

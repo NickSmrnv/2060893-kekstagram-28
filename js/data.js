@@ -9,11 +9,6 @@ const DataForForm = {
   ERROR_MESSAGE_UNIQUE_HASHTAG: 'Хэштэги должны быть уникальными',
 };
 
-const SubmitButtonText = {
-  IDLE: 'Сохранить',
-  SENDING: 'Сохраняю...'
-};
-
 // Данные для фильтров(эффектов) фотографии
 const dataForEffects = [
   {
@@ -74,4 +69,4 @@ const DataForScale = {
   MIN_SCALE_VALUE: 25,
 };
 
-export {DataForForm, SubmitButtonText, dataForEffects, DataForScale};
+export {DataForForm, dataForEffects, DataForScale};

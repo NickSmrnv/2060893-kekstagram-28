@@ -1,5 +1,5 @@
 // Модуль работы формы
-import {DataForForm, SubmitButtonText} from './data.js';
+import {DataForForm} from './data.js';
 import {resetEffects} from './effects.js';
 import {resetScale} from './scale.js';
 import {isEscapeKey} from './util.js';
@@ -15,18 +15,17 @@ const submitButton = form.querySelector('.img-upload__submit');
 const imgUploadPreview = form.querySelector('.img-upload__preview img');
 
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
-let tagsList = [];
+
+const SubmitButtonText = {
+  IDLE: 'Сохранить',
+  SENDING: 'Сохраняю...'
+};
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   erorTextClass: 'img-upload__field-wrapper__error',
 });
-
-function validateHashtag (value) {
-  tagsList = value.trim().split(' ').filter((tag) => tag.trim().length);
-  return tagsList;
-}
 
 const isValidHashtag = (value) => DataForForm.VALID_SYMBOLS.test(value);
 
@@ -37,37 +36,18 @@ const isUniqHashtags = (value) => {
 
 const checkingForQuantityHashtags = (value) => value.length <= DataForForm.MAX_HASHTAG_QUANTITY;
 
-const validateUniqueHashtags = (value) => {
-  validateHashtag(value,tagsList);
-  return isUniqHashtags(tagsList);
-};
-
-const validateQuantityHashtags = (value) => {
-  validateHashtag(value,tagsList);
-  return checkingForQuantityHashtags(tagsList);
-};
-
-const validateValidHashtags = (value) => {
-  validateHashtag(value,tagsList);
-  return tagsList.every(isValidHashtag);
+const validateTags = (value) => {
+  const tags = value
+    .trim()
+    .split(' ')
+    .filter((tag) => tag.trim().length);
+  return checkingForQuantityHashtags(tags) && isUniqHashtags(tags) && tags.every(isValidHashtag);
 };
 
 pristine.addValidator(
   hashtagField,
-  validateQuantityHashtags,
-  DataForForm.ERROR_MESSAGE_HASHTAG_QUANTITY,
-);
-
-pristine.addValidator(
-  hashtagField,
-  validateUniqueHashtags,
-  DataForForm.ERROR_MESSAGE_UNIQUE_HASHTAG,
-);
-
-pristine.addValidator(
-  hashtagField,
-  validateValidHashtags,
-  DataForForm.ERROR_MESSAGE_VALID_HASHTAG,
+  validateTags,
+  DataForForm.ERROR_MESSAGE_VALID_HASHTAG
 );
 
 const isFieldFocus = () =>
@@ -107,9 +87,9 @@ const onUploadFileChange = () => {
   modalOpen();
 };
 
-const onCancelButtonClick = () => {
+uploadCancel.addEventListener('click', () => {
   modalClose();
-};
+});
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -135,7 +115,6 @@ const submitForm = (cb) => {
 };
 
 uploadStart.addEventListener('change', onUploadFileChange);
-uploadCancel.addEventListener('click', onCancelButtonClick);
 form.addEventListener('submit', submitForm);
 
-export {submitForm, modalClose};
+export {submitForm, modalClose, onDocumentEscKeydown};
