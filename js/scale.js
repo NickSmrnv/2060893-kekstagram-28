@@ -15,20 +15,14 @@ const scaleImage = (value) => {
 const onClickSmallerButton = () => {
   const newValue = parseInt (scaleValue.value, 10);
   const calcSmaller = newValue - DataForScale.STEP_SCALE_VALUE;
-  scaleValue.value = calcSmaller;
-  if (scaleValue.value < DataForScale.MIN_SCALE_VALUE) {
-    scaleValue.value = DataForScale.MIN_SCALE_VALUE;
-  }
+  scaleValue.value = calcSmaller < DataForScale.MIN_SCALE_VALUE ? DataForScale.MIN_SCALE_VALUE : calcSmaller;
   scaleImage(scaleValue.value);
 };
 
 const onClickBiggerButton = () => {
   const newValue = parseInt (scaleValue.value, 10);
   const calcBigger = newValue + DataForScale.STEP_SCALE_VALUE;
-  scaleValue.value = calcBigger;
-  if(scaleValue.value > DataForScale.MAX_SCALE_VALUE) {
-    scaleValue.value = DataForScale.MAX_SCALE_VALUE;
-  }
+  scaleValue.value = calcBigger > DataForScale.MAX_SCALE_VALUE ? DataForScale.MAX_SCALE_VALUE : calcBigger;
   scaleImage(scaleValue.value);
 };
 

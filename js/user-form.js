@@ -3,6 +3,8 @@ import {DataForForm} from './data.js';
 import {resetEffects} from './effects.js';
 import {resetScale} from './scale.js';
 import {isEscapeKey} from './util.js';
+import {showSuccessMessage, showErrorMessage} from './messages.js';
+import {sendData} from './api.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadStart = form.querySelector('#upload-file');
@@ -83,9 +85,9 @@ function onDocumentEscKeydown (evt) {
   }
 }
 
-const onUploadFileChange = () => {
+uploadStart.addEventListener('change', () => {
   modalOpen();
-};
+});
 
 uploadCancel.addEventListener('click', () => {
   modalClose();
@@ -101,20 +103,23 @@ const unblockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-const submitForm = (cb) => {
-  form.addEventListener('submit', async (evt) => {
-    evt.preventDefault();
-
-    const isValid = pristine.validate();
-    if (isValid) {
-      blockSubmitButton();
-      await cb(new FormData(form));
+const onFormSubmit = async (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    blockSubmitButton();
+    try {
+      await sendData(new FormData(form));
+      modalClose();
+      showSuccessMessage();
+    } catch {
+      showErrorMessage();
+    } finally {
       unblockSubmitButton();
     }
-  });
+  }
 };
 
-uploadStart.addEventListener('change', onUploadFileChange);
-form.addEventListener('submit', submitForm);
+form.addEventListener('submit', onFormSubmit);
 
-export {submitForm, modalClose, onDocumentEscKeydown};
+export {onDocumentEscKeydown};

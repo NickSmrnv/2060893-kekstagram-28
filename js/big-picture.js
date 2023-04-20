@@ -48,6 +48,8 @@ const renderComments = () => {
   commentCount.innerHTML = `${commentsShown} из <span class="comments-count">${commentsTotal}</span> комментариев`;
 };
 
+const onCommentsLoaderButtonClick = () => renderComments(commentsArray);
+
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -55,6 +57,7 @@ const closeBigPicture = () => {
   commentsShown = 0;
   commentsTotal = 0;
   commentsArray = [];
+  commentsLoader.removeEventListener('click', onCommentsLoaderButtonClick);
 };
 
 function onDocumentKeydown (evt) {
@@ -97,9 +100,7 @@ const showBigPicture = (index) => {
   commentsTotal = commentsArray.length;
   resetCommentsContainer();
   renderComments();
-  commentsLoader.addEventListener('click', () => {
-    renderComments();
-  });
+  commentsLoader.addEventListener('click', onCommentsLoaderButtonClick);
 };
 
 export {showBigPicture};
